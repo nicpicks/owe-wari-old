@@ -24,7 +24,7 @@ function CameraClip({ onCapture }) {
 
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
-        const imageData = canvas.toDataURL('image/png');
+        const imageData = canvas.toDataURL('image/png', 1.0);
         onCapture(imageData);
     };
 
@@ -32,7 +32,7 @@ function CameraClip({ onCapture }) {
         <div className="w-full flex flex-col items-center">
 
             <video ref={videoRef} autoPlay playsInline />
-            <canvas ref={canvasRef} className='m-4' />
+            <canvas ref={canvasRef} className='m-2 max-w-full max-h-full' />
             <div className="p-5 justify-between flex-gap-2">
                 <button
                     onClick={startCamera}

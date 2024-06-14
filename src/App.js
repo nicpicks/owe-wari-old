@@ -14,6 +14,8 @@ export default function App() {
           'Content-Type': 'multipart/form-data',
           'apikey': 'K89350350188957',
           'isTable': 'true',
+          'scale': 'true',
+          'OCREngine': '2',
         },
       });
       setOcrResult(response.data);
@@ -30,7 +32,12 @@ export default function App() {
         <div className="mt-8 p-4 bg-gray-800 rounded-lg">
           <h2 className="text-2xl mb-4">Receipt Details:</h2>
           <pre className="whitespace-pre-wrap">
-            {typeof ocrResult === 'string' ? ocrResult : JSON.stringify(ocrResult, null, 2)}
+            {typeof ocrResult === 'string'
+              ? ocrResult
+              : ocrResult.ParsedResults.map((result, index) =>
+                <p key={index}>{result.ParsedText}</p>
+              )
+            }
           </pre>
         </div>
       )}

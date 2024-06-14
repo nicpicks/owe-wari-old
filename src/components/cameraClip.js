@@ -5,30 +5,44 @@ function CameraClip({ onCapture }) {
     const canvasRef = useRef(null);
 
     const startCamera = async () => {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const constraints = {
+            video: {
+                facingMode: 'environment'
+            }
+        };
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
         videoRef.current.srcObject = stream;
     };
 
     const takePicture = async () => {
+        const video = videoRef.current;
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
         const imageData = canvas.toDataURL('image/png');
         onCapture(imageData);
     };
 
     return (
-        <div>
-            <video ref={videoRef} autoPlay />
-            <canvas ref={canvasRef} />
-            <button
-                onClick={startCamera}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >Open Camera</button>
-            <button
-                onClick={takePicture}
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
-            >Take Picture</button>
+        <div className="w-full flex flex-col items-center">
+
+            <video ref={videoRef} autoPlay playsInline />
+            <canvas ref={canvasRef} className='m-4' />
+            <div className="p-5 justify-between flex-gap-2">
+                <button
+                    onClick={startCamera}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >Open Camera</button>
+                <button
+                    onClick={takePicture}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4"
+                >Take Picture</button>
+            </div>
         </div>
     );
 }
